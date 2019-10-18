@@ -63,8 +63,8 @@ def main(screen):
             row = int(drop.row * height)
             screen.chgat(row, int(drop.column * width), 1,
                          curses.color_pair(2) | curses.A_BOLD)
-            if row > 0:
-                screen.chgat(row - 1, int(drop.column * width), 1,
+            for i in range(max(0, row - 4), row):
+                screen.chgat(i, int(drop.column * width), 1,
                              curses.color_pair(2))
             drop.update()
 
