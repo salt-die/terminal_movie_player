@@ -7,4 +7,4 @@ Play a movie like so:
 
 If your terminal supports colors try terminal_movies_color or terminal_movies_gray.
 
-Requires ffpyplayer(for sound), curses, and opencv
+Requires ffpyplayer (for sound), curses, and opencv.
