@@ -5,7 +5,7 @@ Note that characters are actually mirrored in the matrix, but besides that we sh
 most of the characters found in the matrix "code-rain".
 
 Play movie like so:
->>>python3 terminal_movies_ascii.py path/to/movie
+>>>python3 terminal_movies_matrix.py path/to/movie
 """
 import argparse
 import curses
