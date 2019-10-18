@@ -9,10 +9,22 @@ Play movie like so:
 """
 import argparse
 import curses
+import random
 import time
 import cv2
 from ffpyplayer.player import MediaPlayer
 
+class CodeRain:
+    row = 0
+    timer = 12
+
+    def __init__(self):
+        self.column = random.random()
+        self.started = time.time()
+
+    def update(self):
+        now = time.time() - self.started
+        self.row = now/self.timer
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path", help="path to movie")
@@ -27,19 +39,39 @@ def main(screen):
 
     movie = cv2.VideoCapture(path)
     audio = MediaPlayer(path)
+    rain = []
     running = read_flag = True
 
     while read_flag and running:
         audio.get_frame()
         read_flag, frame = movie.read()
 
+        height, width = screen.getmaxyx()
+
         grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        resized = cv2.resize(grayscale, screen.getmaxyx()[::-1])
+        resized = cv2.resize(grayscale, (width, height))
 
         for row_num, row in enumerate(resized):
             screen.addstr(row_num, 0,
                           ''.join(ascii_map[int(color/scale)] for color in row[:-1]))
+
+        # code rain updates
+        if random.random() < .01:
+            rain.append(CodeRain())
+
+        for drop in rain:
+            row = int(drop.row * height)
+            screen.chgat(row, int(drop.column * width), 1,
+                         curses.color_pair(2) | curses.A_BOLD)
+            if row > 0:
+                screen.chgat(row - 1, int(drop.column * width), 1,
+                             curses.color_pair(2))
+            drop.update()
+
         screen.refresh()
+
+        #Delete rain at the bottom of screen
+        rain = [drop for drop in rain if drop.row < 1]
 
         # Sync audio and video
         audio_time = audio.get_pts() * 1000
@@ -61,6 +93,7 @@ def init_curses(screen):
     screen.nodelay(1)
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
     screen.attron(curses.color_pair(1))
     screen.clear()
 
