@@ -16,7 +16,7 @@ from ffpyplayer.player import MediaPlayer
 
 class CodeRain:
     row = 0
-    timer = 12
+    timer = 12 #Seconds to fall to bottom
 
     def __init__(self):
         self.column = random.random()
@@ -24,7 +24,7 @@ class CodeRain:
 
     def update(self):
         now = time.time() - self.started
-        self.row = now/self.timer
+        self.row = now / self.timer
 
 parser = argparse.ArgumentParser()
 parser.add_argument("path", help="path to movie")
