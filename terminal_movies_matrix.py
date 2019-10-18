@@ -1,8 +1,7 @@
 """
 Watch movies in your terminal with this handy video-to-ascii converter.
 
-Note that characters are actually mirrored in the matrix, but besides that we should have
-most of the characters found in the matrix "code-rain".
+Note that characters are actually mirrored in the matrix.
 
 Play movie like so:
 >>>python3 terminal_movies_matrix.py path/to/movie
@@ -31,7 +30,7 @@ parser.add_argument("path", help="path to movie")
 args = parser.parse_args()
 path = args.path
 
-ascii_map = dict(enumerate(' ._ｰ*:ﾝ+=<>ﾆﾍﾐｼｺ7ﾃｯﾘﾒﾅｱﾗﾊｹﾏ1ｸﾜｴｽｳｷﾑﾇﾈﾓｵｻﾎ2ｾﾀZ3I54ｶ908'))
+ascii_map = dict(enumerate(' .ｰ*:+ﾆﾍｺ7ﾘﾒﾊ1ﾜｴｽﾑﾇｵｻ2ｾZI54ｶ08'))
 scale = 255/len(ascii_map) + .05  # Add a small amount to prevent key errors
 
 def main(screen):
