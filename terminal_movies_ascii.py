@@ -2,10 +2,11 @@
 Watch movies in your terminal with this handy video-to-ascii converter.
 
 Play movie like so:
->>>python3 terminal_movies.py path/to/movie
+>>>python3 terminal_movies_ascii.py path/to/movie
 """
 import argparse
 import curses
+import time
 import cv2
 from ffpyplayer.player import MediaPlayer
 
@@ -37,10 +38,14 @@ def main(screen):
                           ''.join(ascii_map[int(color/scale)] for color in row[:-1]))
         screen.refresh()
 
-        # This loop syncs video with audio.  Without it the video may lag behind.
+        # Sync audio and video
         audio_time = audio.get_pts() * 1000
-        while audio_time - movie.get(cv2.CAP_PROP_POS_MSEC) > 1:
-            movie.read()
+        movie_sleep = (movie.get(cv2.CAP_PROP_POS_MSEC) - audio_time)/1000
+        if movie_sleep > 0:
+            time.sleep(movie_sleep)
+        else:
+            while audio_time - movie.get(cv2.CAP_PROP_POS_MSEC) > 1:
+                movie.read()
 
         running = screen.getch() != ord('q')
 

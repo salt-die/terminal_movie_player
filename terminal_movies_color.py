@@ -1,11 +1,15 @@
 """
-Watch movies in your terminal with this handy video-to-ascii converter.
+Watch movies in your terminal with this handy terminal movie player.
+
+If your movie is dark or black-and-white, you'll get better results with terminal_movies_gray.py
+(curses has fewer dark colors than bright colors)
 
 Play movie like so:
->>>python3 terminal_movies.py path/to/movie
+>>>python3 terminal_movies_color.py path/to/movie
 """
 import argparse
 import curses
+import time
 import cv2
 from ffpyplayer.player import MediaPlayer
 
@@ -42,10 +46,14 @@ def main(screen):
                 screen.addstr(row_num, column," ", curses.color_pair(pair))
         screen.refresh()
 
-        # This loop syncs video with audio.  Without it the video may lag behind.
+        # Sync audio and video
         audio_time = audio.get_pts() * 1000
-        while audio_time - movie.get(cv2.CAP_PROP_POS_MSEC) > 1:
-            movie.read()
+        movie_sleep = (movie.get(cv2.CAP_PROP_POS_MSEC) - audio_time)/1000
+        if movie_sleep > 0:
+            time.sleep(movie_sleep)
+        else:
+            while audio_time - movie.get(cv2.CAP_PROP_POS_MSEC) > 1:
+                movie.read()
 
         running = screen.getch() != ord('q')
 
