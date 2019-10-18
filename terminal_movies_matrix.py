@@ -30,7 +30,7 @@ parser.add_argument("path", help="path to movie")
 args = parser.parse_args()
 path = args.path
 
-ascii_map = dict(enumerate(' .ｰ*:+ﾆﾍｺ7ﾘﾒﾊ1ﾜｴｽﾑﾇｵｻ2ｾZI54ｶ08'))
+ascii_map = dict(enumerate(' .ﾆ*ﾍ7ﾘﾒﾊﾜﾑﾇｵ2ZI508'))
 scale = 255/len(ascii_map) + .05  # Add a small amount to prevent key errors
 
 def main(screen):
