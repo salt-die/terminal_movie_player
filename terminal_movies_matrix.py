@@ -35,7 +35,6 @@ scale = 255/len(ascii_map) + .05  # Add a small amount to prevent key errors
 
 def main(screen):
     init_curses(screen)
-
     movie = cv2.VideoCapture(path)
     audio = MediaPlayer(path)
     rain = []
@@ -47,29 +46,28 @@ def main(screen):
 
         height, width = screen.getmaxyx()
 
-        grayscale = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        grayscale = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        cv2.imshow('frame', grayscale)
+
         resized = cv2.resize(grayscale, (width, height))
 
         for row_num, row in enumerate(resized):
-            screen.addstr(row_num, 0,
-                          ''.join(ascii_map[int(color/scale)] for color in row[:-1]))
+            screen.addstr(row_num, 0, ''.join(ascii_map[int(color/scale)] for color in row[:-1]))
 
-        # code rain updates
+        # Code rain updates
         if random.random() < .01:
             rain.append(CodeRain())
 
         for drop in rain:
-            row = int(drop.row * height)
-            screen.chgat(row, int(drop.column * width), 1,
-                         curses.color_pair(2) | curses.A_BOLD)
+            row, col = int(drop.row * height), int(drop.column * width)
+            screen.chgat(row, col, 1, curses.color_pair(2) | curses.A_BOLD)
             for i in range(max(0, row - 4), row):
-                screen.chgat(i, int(drop.column * width), 1,
-                             curses.color_pair(2))
+                screen.chgat(i, col, 1, curses.color_pair(2))
             drop.update()
 
         screen.refresh()
 
-        #Delete rain at the bottom of screen
+        # Delete rain at the bottom of screen
         rain = [drop for drop in rain if drop.row < 1]
 
         # Sync audio and video
