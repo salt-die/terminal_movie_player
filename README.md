@@ -1,5 +1,9 @@
 Watch movies in your terminal with this handy video-to-ascii converter.
 
+
+![Preview](ss.gif)
+
+
 Play a movie like so:
 ```
 >>>python3 terminal_movies_ascii.py path/to/movie
